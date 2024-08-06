@@ -5,12 +5,27 @@ use std::path::Path;
 
 fn main() -> io::Result<()> {
     // Collect command-line arguments
+    let args: Vec<String> = env::args().collect();
+
+    // Check if the required arguments provided
+    if args.len() < 3 {
+        eprintln!("Usage: {} <input_file> <output_directory>", args[0]);
+        std::process::exit(1);
+    }
 
     // The path to the input file
-    let path = Path::new("/Users/kelvin/Downloads/aug06_083000_150000.log.txt");
+    let input_path = Path::new(&args[1]);
 
+    // The path to the output directory
+    let output_directory = Path::new(&args[2]);
+
+    // Ensure the output directory exists
+    if !output_directory.is_dir() {
+        eprintln!("Error: {} is not a directory", output_directory.display());
+        std::process::exit(1);
+    }
     // Open the file in read-only mode and create a buffered reader
-    let file = File::open(&path)?;
+    let file = File::open(&input_path)?;
     let reader = BufReader::new(file);
 
     // The string we are searching for
@@ -33,7 +48,7 @@ fn main() -> io::Result<()> {
     // Iterate over the ranges in the mark vector
     for i in 0..(mark.len() - 1) {
         let file_name = format!("startup_num#:_{}.txt", i + 1);
-        let output_path = Path::new(&file_name);
+        let output_path = output_directory.join(file_name);
         let mut output_file = File::create(&output_path)?;
         println!("{} to {}", mark[i], mark[i + 1]);
         for line in &lines[mark[i]..mark[i + 1]] {
