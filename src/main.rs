@@ -1,10 +1,23 @@
 mod cli;
+mod parse;
 use crate::cli::Cli;
-use clap::{Parser, Subcommand};
+use crate::cli::Commands;
+use crate::parse::Parse;
+use clap::{Command, Parser, Subcommand};
+use std::io;
 use std::path::PathBuf;
 
-fn main() {
+fn main() -> io::Result<()> {
     let cli = Cli::parse();
+    // println!("{:#?}", cli);
+    match &cli.command {
+        Some(Commands::HmiBooting {
+            source_path,
+            dest_path,
+        }) => Parse::parse_booting(source_path.clone(), dest_path.clone()),
+
+        None => Ok({}),
+    }
 }
 // use std::env;
 // use std::fs::File;

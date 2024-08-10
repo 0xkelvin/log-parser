@@ -1,14 +1,14 @@
 use clap::{Command, Parser, Subcommand};
 use std::path::PathBuf;
 
-#[derive(Parser)]
+#[derive(Debug, Parser)]
 #[command(version, about, long_about= None)]
 pub struct Cli {
     #[command(subcommand)]
-    command: Option<Commands>,
+    pub command: Option<Commands>,
 }
 
-#[derive(Subcommand)]
+#[derive(Debug, Subcommand)]
 pub enum Commands {
     /// parse booting logs
     HmiBooting {
